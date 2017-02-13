@@ -61,7 +61,6 @@ public class JDBCIdentityDAO {
 			String displayName = rs.getString("IDENTITIES_DISPLAYNAME");
 			String uid = String.valueOf(rs.getString("IDENTITIES_UID"));
 			String email = rs.getString("IDENTITIES_EMAIL");
-			//Date birthDate = rs.getDate("IDENTITIES_BIRTHDATE");
 			Identity identity = new Identity(uid, displayName, email);
 			identities.add(identity);
 			
@@ -73,30 +72,47 @@ public class JDBCIdentityDAO {
 	
 	
 	public void modifyIdentity(Identity identity) throws SQLException {
-
-		String updateStatement = "update IDENTITIES set IDENTITIES_DISPLAYNAME = ?, IDENTITIES_EMAIL = ? where IDENTITIES_UID = ?";
-		PreparedStatement pstmtUpdate = connection.prepareStatement(updateStatement);
-		pstmtUpdate.setString(1, identity.getDisplayName());
-		pstmtUpdate.setString(2, identity.getEmail());		
-		pstmtUpdate.setString(3, identity.getUid());
-
-		pstmtUpdate.execute();
-		pstmtUpdate.close();
+			String updateStatement = "update IDENTITIES set IDENTITIES_DISPLAYNAME = ?, IDENTITIES_EMAIL = ? where IDENTITIES_UID = ?";
+			PreparedStatement pstmtUpdate = connection.prepareStatement(updateStatement);
+			pstmtUpdate.setString(1, identity.getDisplayName());
+			pstmtUpdate.setString(2, identity.getEmail());		
+			pstmtUpdate.setString(3, identity.getUid());
+			pstmtUpdate.execute();
+			pstmtUpdate.close();
 	}
 	
-	public void delteteIdentity1(Identity identity) throws SQLException {
+	public boolean delteteIdentity1(Identity identity) throws SQLException {
+		if(verify(identity)){
+			String deleteStatement = "delete from IDENTITIES where IDENTITIES_UID = ?";
+			PreparedStatement pstmtDelete = connection.prepareStatement(deleteStatement);
+			pstmtDelete.setString(1, identity.getUid());
+			pstmtDelete.execute();
+			pstmtDelete.close();
+			logger.info("Identity deleted\n");
+			return true;
+		}
+		return false;
+	}
 
-		String deleteStatement = "delete from IDENTITIES where IDENTITIES_UID = ?";
-		PreparedStatement pstmtDelete = connection.prepareStatement(deleteStatement);
-		pstmtDelete.setString(1, identity.getUid());
-		pstmtDelete.execute();
-		pstmtDelete.close();
-		logger.info("Identity deleted\n");
+
+	public boolean verify(Identity identity) throws SQLException {
+
+		String deleteStatement = "select IDENTITIES_UID from IDENTITIES where IDENTITIES_UID = ?";
+		PreparedStatement pstmtSelect = connection.prepareStatement(deleteStatement);
+		pstmtSelect.setString(1, identity.getUid());
+		ResultSet rs = pstmtSelect.executeQuery();
+		if(rs.next()){
+			pstmtSelect.close();
+			return true;
+		}else{
+			logger.info("Identity not found");
+			pstmtSelect.close();			
+			return false;
+		}
 	
 	}
 
 
-	
 	
 
 	

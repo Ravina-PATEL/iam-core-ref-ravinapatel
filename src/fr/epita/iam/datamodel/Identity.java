@@ -4,7 +4,7 @@
 package fr.epita.iam.datamodel;
 
 /**
- * @author tbrou
+ * @author RAVINA_PATEL
  *
  */
 public class Identity {
@@ -24,7 +24,7 @@ public class Identity {
 		this.displayName = displayName;
 		this.email = email;
 	}
-	
+
 	
 	/**
 	 * @return the uid

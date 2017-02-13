@@ -40,8 +40,8 @@ public class ConsoleLauncher {
 		logger.info("Please enter your password");
 		String password = scanner.nextLine();
 		
-		Authenticate authService = new Authenticate();
-		if(!authService.authenticate(login, password)){
+		Authenticate auth = new Authenticate(login, password);
+				if(!auth.authenticate(login, password)){
 			scanner.close();
 			return;
 		}
@@ -65,8 +65,7 @@ public class ConsoleLauncher {
 			listIdentities();
 			break;
 		case "e":
-			terminationProcess();
-			
+			terminationProcess();                                        			
 			break;
 			
 			
@@ -89,6 +88,7 @@ public class ConsoleLauncher {
 		if("Y".equals(flag)){
 			return true;
 		}else if("N".equals(flag)){
+			logger.info("Thank you for banking with us");
 			return false;
 		}
 		return false;
@@ -102,26 +102,28 @@ public class ConsoleLauncher {
 			logger.info("You've selected : Identity Updation");
 			logger.info("Please enter the Identity display number");
 			String displayNumber = scanner.nextLine();
-			logger.info("Please enter the Identity Name");
-			String name = scanner.nextLine();
-			logger.info("Please enter the Identity email");
-			String email = scanner.nextLine();
-			Identity newIdentity = new Identity(displayNumber, name, email);
-			dao.modifyIdentity(newIdentity);
-			logger.info("you succesfully updated this identity :" + newIdentity);
-		
-		
+			Identity newIdentity = new Identity(displayNumber, null, null);
+			if(dao.verify(newIdentity))	{	
+				logger.info("Please enter the Identity Name");
+				String name = scanner.nextLine();
+				logger.info("Please enter the Identity email");
+				String email = scanner.nextLine();
+				newIdentity = new Identity(displayNumber, name, email);
+				dao.modifyIdentity(newIdentity);
+				logger.info("you succesfully updated this identity :" + newIdentity);
+			}
 		}
+			
 
 	    private static void deleteIdentity(Scanner scanner) throws SQLException {
-		
+	    	
 			logger.info("You've selected : Identity Deletion");
 			logger.info("Please enter the Identity display number for deletion");
 			String displayNumber = scanner.nextLine();
 			Identity delIdentity = new Identity(displayNumber, null, null);
-			dao.delteteIdentity1(delIdentity);
-			
-			logger.info("you succesfully deleted this identity :" + delIdentity );
+			if(dao.delteteIdentity1(delIdentity)){
+				logger.info("you succesfully deleted this identity :" + delIdentity );
+			}
 	    }
 
 	
@@ -170,8 +172,7 @@ public class ConsoleLauncher {
 	 * @param scanner
 	 * @return
 	 */
-	
-	
+
 	private static String menu(Scanner scanner) {
 		logger.info("You're authenticated");
 		logger.info("Here are the actions you can perform :");
