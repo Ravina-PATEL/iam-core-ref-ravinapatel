@@ -1,0 +1,38 @@
+Hello, welcome to the IAM application
+TOM
+Please enter your login
+Please enter your password
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+This is the list of all identities in the system
+TOM
+0.Identity [uid=108, displayName=asd, email=asdd]
+1.Identity [uid=105, displayName=raaaaa, email=hjgcjsm]
+2.Identity [uid=106, displayName=ravina, email=gudfk]
+Do you want to continue Y/N
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+Good bye...
+Do you want to continue Y/N
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+Good bye...
+Do you want to continue Y/N
