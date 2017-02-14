@@ -64,9 +64,6 @@ public class Identity {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Identity [uid=" + uid + ", displayName=" + displayName + ", email=" + email + "]";

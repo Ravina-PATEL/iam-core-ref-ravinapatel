@@ -14,15 +14,16 @@ import java.util.Date;
 import java.util.List;
 import org.apache.logging.log4j.*;
 import fr.epita.iam.datamodel.Identity;
+import fr.epita.iam.exception.MyException;
 import fr.epita.iam.launcher.ConsoleLauncher;
 
 /**
- * @author RAVINA
+ * @author RAVINA_PATEL
  *
  */
 public class JDBCIdentityDAO {
 
-	
+	// Instance of logger to show
 	private static final Logger logger =  LogManager.getLogger(ConsoleLauncher.class);
 	private Connection connection;
 	
@@ -31,12 +32,16 @@ public class JDBCIdentityDAO {
 	 * @throws SQLException 
 	 * 
 	 */
+	
+	
+	// JDBC Connection to Database
 	public JDBCIdentityDAO() throws SQLException {
 		this.connection = DriverManager.getConnection("jdbc:derby://localhost:1527/sample;create=true","TOM","TOM");
 		logger.info(connection.getSchema());
 	}
 	
 	
+	// Insert query to write in Identity Table
 	public void writeIdentity(Identity identity) throws SQLException {
 
 		String insertStatement = "insert into IDENTITIES (IDENTITIES_DISPLAYNAME, IDENTITIES_EMAIL, IDENTITIES_BIRTHDATE) "
@@ -50,7 +55,9 @@ public class JDBCIdentityDAO {
 		pstmtInsert.execute();
 		pstmtInsert.close();
 	}
+	
 
+	// Select query to show the list of identities from Identity Table
 	public List<Identity> readAll() throws SQLException {
 		logger.info(connection.getSchema());
 		List<Identity> identities = new ArrayList<Identity>();
@@ -71,6 +78,7 @@ public class JDBCIdentityDAO {
 	}
 	
 	
+	// Update Query to modify identity in the Identity Table
 	public void modifyIdentity(Identity identity) throws SQLException {
 			String updateStatement = "update IDENTITIES set IDENTITIES_DISPLAYNAME = ?, IDENTITIES_EMAIL = ? where IDENTITIES_UID = ?";
 			PreparedStatement pstmtUpdate = connection.prepareStatement(updateStatement);
@@ -81,21 +89,21 @@ public class JDBCIdentityDAO {
 			pstmtUpdate.close();
 	}
 	
-	public boolean delteteIdentity1(Identity identity) throws SQLException {
-		if(verify(identity)){
+	
+	// Delete Query delete identity in the Identity Table
+	public void delteteIdentity1(Identity identity) throws SQLException, MyException {
+			verify(identity);
 			String deleteStatement = "delete from IDENTITIES where IDENTITIES_UID = ?";
 			PreparedStatement pstmtDelete = connection.prepareStatement(deleteStatement);
 			pstmtDelete.setString(1, identity.getUid());
 			pstmtDelete.execute();
 			pstmtDelete.close();
-			logger.info("Identity deleted\n");
-			return true;
-		}
-		return false;
+			logger.info("Identity deleted\n");	
 	}
 
 
-	public boolean verify(Identity identity) throws SQLException {
+	//to check that entered UID is available or not in database table
+	public void verify(Identity identity) throws SQLException, MyException {
 
 		String deleteStatement = "select IDENTITIES_UID from IDENTITIES where IDENTITIES_UID = ?";
 		PreparedStatement pstmtSelect = connection.prepareStatement(deleteStatement);
@@ -103,18 +111,11 @@ public class JDBCIdentityDAO {
 		ResultSet rs = pstmtSelect.executeQuery();
 		if(rs.next()){
 			pstmtSelect.close();
-			return true;
 		}else{
-			logger.info("Identity not found");
 			pstmtSelect.close();			
-			return false;
+			throw new MyException("Identity not found");
 		}
 	
 	}
-
-
-	
-
-	
 	
 }
