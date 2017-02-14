@@ -95,7 +95,7 @@ public class ConsoleLauncher {
 		if("Y".equals(flag)){
 			return true;
 		}else if("N".equals(flag)){
-			logger.info("Thank you for banking with us");
+			logger.info("Thank you");
 			return false;
 		}
 		return false;
